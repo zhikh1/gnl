@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/20 22:52:37 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/21 22:45:19 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -110,28 +110,24 @@ char	*get_next_line(int fd)
 	char	*new_line;
 
 	new_line = NULL;
-	if (BUFFER_SIZE > 0 && fd >= 0)
+	if (BUFFER_SIZE <= 0 && fd < 0)
+		return (NULL);
+	line_struct = get_line_struct(fd);
+	new_line = check_preveous_data(line_struct);
+	while (!line_struct->eol_flag && line_struct->str)
 	{
-		line_struct = get_line_struct(fd);
-		new_line = check_preveous_data(line_struct);
-		while (!line_struct->eol_flag && line_struct->str)
+		line_struct->read_size = read(fd, &line_struct->str
+			[line_struct->buf_size - BUFFER_SIZE], BUFFER_SIZE);
+		if ((long int)line_struct->read_size >= 0)
+		{	
+			ft_update_fact_size(line_struct, 1);
+			new_line = change_size(line_struct, line_struct->eol_flag);
+		}
+		else
 		{
-			line_struct->read_size = read(fd, &line_struct->str
-				[line_struct->buf_size - BUFFER_SIZE], BUFFER_SIZE);
-			if ((long int)line_struct->read_size >= 0)
-			{	
-				ft_update_fact_size(line_struct, 1);
-				if (!line_struct->eol_flag)
-					change_size(line_struct, 0);
-				else
-					new_line = change_size(line_struct, 1);
-			}
-			else
-			{
-				free_str(line_struct);
-				return (NULL);
-			}
-		}		
+			free_str(line_struct);
+			return (NULL);
+		}
 	}
 	return (new_line);
 }
