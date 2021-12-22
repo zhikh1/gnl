@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/22 21:33:23 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/22 21:43:31 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -109,6 +109,7 @@ char	*get_next_line(int fd)
 	t_line	*line_struct;
 	char	*new_line;
 
+	new_line = NULL;
 	if (BUFFER_SIZE <= 0 && fd < 0)
 		return (NULL);
 	line_struct = get_line_struct(fd);
