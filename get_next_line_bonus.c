@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/21 22:45:19 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/22 21:33:34 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -25,8 +25,8 @@ void	free_str(t_line *line_struct)
 		while (prev && prev->next_line != line_struct)
 			prev = prev->next_line;
 		if (line_struct == *(line_struct->head))
-			*(line_struct->head) = NULL;
-		else
+			*(line_struct->head) = line_struct->next_line;
+		else if (prev)
 			prev->next_line = line_struct->next_line;
 		if (line_struct->str)
 			free(line_struct->str);
@@ -109,12 +109,11 @@ char	*get_next_line(int fd)
 	t_line	*line_struct;
 	char	*new_line;
 
-	new_line = NULL;
 	if (BUFFER_SIZE <= 0 && fd < 0)
 		return (NULL);
 	line_struct = get_line_struct(fd);
 	new_line = check_preveous_data(line_struct);
-	while (!line_struct->eol_flag && line_struct->str)
+	while (line_struct && !line_struct->eol_flag && line_struct->str)
 	{
 		line_struct->read_size = read(fd, &line_struct->str
 			[line_struct->buf_size - BUFFER_SIZE], BUFFER_SIZE);

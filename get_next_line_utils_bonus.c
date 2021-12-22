@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/21 21:20:47 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/22 21:30:52 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -87,7 +87,7 @@ char	*remap_ptrs(char *tail_pt, int split_en,
 	if (line_struct->fact_size)
 		line_pt = ft_realloc(line_struct->str,
 				line_struct->buf_size, line_struct->fact_size
-				+ (BUFFER_SIZE * !split_en) + (split_en != 0), 1);
+				+ (BUFFER_SIZE * !split_en) + (split_en == 1), 1);
 	else
 	{
 		free(line_struct->str);
@@ -123,5 +123,7 @@ char	*change_size(t_line *line_struct, int split_en)
 			[line_struct->fact_size], tail_size - BUFFER_SIZE, tail_size, 0);
 	}
 	line_pt = remap_ptrs(tail_pt, split_en, line_struct, tail_size);
+	if (line_struct->fact_size == 0 && split_en)
+		free_str(line_struct);
 	return (line_pt);
 }
