@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/26 20:38:58 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/26 23:08:50 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line.h"
@@ -48,7 +48,6 @@ t_line	*get_line_struct(int fd)
 		{
 			crnt->next_line = get_new_line(fd);
 			crnt = crnt->next_line;
-			crnt->head = &lst_head;
 		}
 		else
 			ft_update_fact_size(crnt, 0);
@@ -57,8 +56,9 @@ t_line	*get_line_struct(int fd)
 	{
 		crnt = get_new_line(fd);
 		lst_head = crnt;
-		crnt->head = &lst_head;
 	}
+	if (crnt)
+		crnt->head = &lst_head;
 	return (crnt);
 }
 
@@ -69,7 +69,7 @@ char	*ft_realloc(char *src, size_t src_size, size_t dst_size, int del)
 
 	i = 0;
 	new = (char *) malloc(sizeof(char) * dst_size);
-	while ((i < src_size) && (i < dst_size) && new && src)
+	while (new && (i < src_size) && (i < dst_size) && src)
 	{
 		new[i] = src[i];
 		i++;
@@ -116,6 +116,8 @@ char	*change_size(t_line **line_struct_p, int split_en)
 	t_line	*line_struct;
 
 	line_struct = *line_struct_p;
+	if (!line_struct)
+		return (NULL);
 	tail_pt = NULL;
 	tail_size = line_struct->buf_size
 		+ line_struct->read_size - line_struct->fact_size;
