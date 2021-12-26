@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/22 21:44:21 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/26 20:39:09 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -108,12 +108,14 @@ char	*remap_ptrs(char *tail_pt, int split_en,
 	return (line_pt);
 }
 
-char	*change_size(t_line *line_struct, int split_en)
+char	*change_size(t_line **line_struct_p, int split_en)
 {
 	char	*line_pt;
 	char	*tail_pt;
 	size_t	tail_size;
+	t_line	*line_struct;
 
+	line_struct = *line_struct_p;
 	tail_pt = NULL;
 	tail_size = line_struct->buf_size
 		+ line_struct->read_size - line_struct->fact_size;
@@ -124,6 +126,9 @@ char	*change_size(t_line *line_struct, int split_en)
 	}
 	line_pt = remap_ptrs(tail_pt, split_en, line_struct, tail_size);
 	if (line_struct->fact_size == 0)
+	{
 		free_str(line_struct);
+		*line_struct_p = NULL;
+	}
 	return (line_pt);
 }

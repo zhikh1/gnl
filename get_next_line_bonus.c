@@ -6,7 +6,7 @@
 /*   By: nomargen <nomargen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 19:19:11 by nomargen          #+#    #+#             */
-/*   Updated: 2021/12/22 21:33:34 by nomargen         ###   ########.fr       */
+/*   Updated: 2021/12/26 18:49:20 by nomargen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "get_next_line_bonus.h"
@@ -96,7 +96,7 @@ char	*check_preveous_data(t_line *line_struct)
 		if (line_struct->eol_flag && line_struct->read_size)
 		{
 			line_struct->buf_size = BUFFER_SIZE;
-			new_line = change_size(line_struct, 1);
+			new_line = change_size(&line_struct, 1);
 		}
 		else
 			line_struct->eol_flag = 0;
@@ -109,6 +109,7 @@ char	*get_next_line(int fd)
 	t_line	*line_struct;
 	char	*new_line;
 
+	new_line = NULL;
 	if (BUFFER_SIZE <= 0 && fd < 0)
 		return (NULL);
 	line_struct = get_line_struct(fd);
@@ -120,7 +121,7 @@ char	*get_next_line(int fd)
 		if ((long int)line_struct->read_size >= 0)
 		{	
 			ft_update_fact_size(line_struct, 1);
-			new_line = change_size(line_struct, line_struct->eol_flag);
+			new_line = change_size(&line_struct, line_struct->eol_flag);
 		}
 		else
 		{
